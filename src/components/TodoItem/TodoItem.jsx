@@ -1,9 +1,9 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-export const TodoItem = ({item, update, remove}) => {
+export const TodoItem = ({item, toggle, remove}) => {
   const toggleMe = () => {
-    item.status = !item.status;
-    update(item);
+    toggle(item.id);
   }
 
   const removeMe = () => {
@@ -17,4 +17,14 @@ export const TodoItem = ({item, update, remove}) => {
       <button className="btn btn-outline-danger btn-sm float-right" onClick={removeMe}>Remove</button>
      </li>
   )
+}
+
+TodoItem.propTypes = {
+  item: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    text: PropTypes.string.isRequired,
+    status: PropTypes.bool.isRequired
+  }).isRequired,
+  toggle: PropTypes.func.isRequired,
+  remove: PropTypes.func.isRequired
 }

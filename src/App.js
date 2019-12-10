@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
-import { InputForm } from './components/InputForm/InputForm.jsx';
+import { InputForm } from './components/InputForm/InputForm';
 import { TodoItem } from './components/TodoItem/TodoItem';
 
 function App() {
@@ -10,12 +10,11 @@ function App() {
     setItems([...items, { id: Date.now(), text: itemText, status: false }]);
   };
 
-  const updateItem = item => {
-    let newItems = items,
-      pos = items.findIndex(el => el.id === item.id);
-
-    newItems[pos].status = item.status;
-    setItems([...newItems]);
+  const toggleItem = id => {
+    const updatedItems = items.map((item) =>
+      item.id === id ? {...item, status: !item.status} : item
+    );
+    setItems(updatedItems)
   };
 
   const removeItem = id => {
@@ -25,21 +24,13 @@ function App() {
   return (
     <div className="App">
       <main className="container">
-        <div className="row">
-          <div className="col">
-            <h1 className="p-3">Todo list</h1>
-            <InputForm onSubmit={itemText => addItem(itemText)} />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col">
-            <ul className="list-group mt-5">
-              {items.map((item, index) => (
-                <TodoItem key={item.id} item={item} update={updateItem} remove={removeItem} />
-              ))}
-            </ul>
-          </div>
-        </div>
+        <h1 className="p-3">Todo list</h1>
+        <InputForm add={addItem} />
+        <ul className="list-group mt-5">
+          {items.map((item) => (
+            <TodoItem key={item.id} item={item} toggle={toggleItem} remove={removeItem} />
+          ))}
+        </ul>
       </main>
     </div>
   );
