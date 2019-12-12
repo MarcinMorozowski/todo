@@ -1,24 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
 import { InputForm } from './components/InputForm/InputForm';
 import { TodoItem } from './components/TodoItem/TodoItem';
+import { connect } from "react-redux";
+import { addTodo } from "./store/actions/items.actions";
 
-function App() {
-  const [items, setItems] = useState([]);
+function App({items, add}) {
 
   const addItem = itemText => {
-    setItems([...items, { id: Date.now(), text: itemText, status: false }]);
-  };
-
-  const toggleItem = id => {
-    const updatedItems = items.map((item) =>
-      item.id === id ? {...item, status: !item.status} : item
-    );
-    setItems(updatedItems)
-  };
-
-  const removeItem = id => {
-    setItems(items.filter(el => el.id !== id));
+    add({ id: Date.now(), text: itemText, status: false });
   };
 
   return (
@@ -28,7 +18,7 @@ function App() {
         <InputForm add={addItem} />
         <ul className="list-group mt-5">
           {items.map((item) => (
-            <TodoItem key={item.id} item={item} toggle={toggleItem} remove={removeItem} />
+            <TodoItem key={item.id} item={item} />
           ))}
         </ul>
       </main>
@@ -36,4 +26,18 @@ function App() {
   );
 }
 
-export default App;
+const mapStateToProps = ({items}) => {
+  return {
+    items
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    add: (item) => dispatch(addTodo(item))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(
+  App
+)
