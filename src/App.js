@@ -2,13 +2,15 @@ import React from 'react';
 import './App.css';
 import { InputForm } from './components/InputForm/InputForm';
 import { TodoItem } from './components/TodoItem/TodoItem';
-import { connect } from "react-redux";
 import { addTodo } from "./store/actions/items.actions";
+import { useDispatch, useSelector } from 'react-redux';
 
-function App({items, add}) {
+function App() {
+  const dispatch = useDispatch();
+  const items = useSelector(state => state.items);
 
   const addItem = itemText => {
-    add({ id: Date.now(), text: itemText, status: false });
+    dispatch(addTodo({ id: Date.now(), text: itemText, status: false }));
   };
 
   return (
@@ -26,18 +28,4 @@ function App({items, add}) {
   );
 }
 
-const mapStateToProps = ({items}) => {
-  return {
-    items
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    add: (item) => dispatch(addTodo(item))
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(
-  App
-)
+export default App;

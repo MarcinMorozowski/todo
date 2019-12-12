@@ -1,10 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from "react-redux";
 import { removeTodo, toggleTodo } from "../../store/actions/items.actions";
+import { useDispatch } from 'react-redux';
 
-const TodoItem = ({item, toggle, remove}) => {
+export const TodoItem = ({item}) => {
   const {id, text, status} = item;
+  const dispatch = useDispatch();
+
+  const toggle = () => dispatch(toggleTodo(id));
+  const remove = () => dispatch(removeTodo(id));
 
   const toggleMe = () => {
     toggle(id);
@@ -23,29 +27,10 @@ const TodoItem = ({item, toggle, remove}) => {
   )
 }
 
-const mapStateToProps = (state, ownProps) => {
-  return ownProps
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    toggle: (id) => dispatch(toggleTodo(id)),
-    remove: (id) => dispatch(removeTodo(id))
-  }
-}
-
 TodoItem.propTypes = {
   item: PropTypes.shape({
     id: PropTypes.number.isRequired,
     text: PropTypes.string.isRequired,
     status: PropTypes.bool.isRequired
-  }).isRequired,
-  toggle: PropTypes.func.isRequired,
-  remove: PropTypes.func.isRequired
+  }).isRequired
 }
-
-const ConnectedTodoItem = connect(mapStateToProps, mapDispatchToProps)(
-  TodoItem
-)
-
-export { ConnectedTodoItem as TodoItem }
